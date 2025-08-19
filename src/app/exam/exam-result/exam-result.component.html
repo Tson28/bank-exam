@@ -1,0 +1,127 @@
+<div class="result-container">
+  <div *ngIf="loading" class="loading-section">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Đang tải kết quả bài thi...</p>
+  </div>
+
+  <div *ngIf="error" class="error-section">
+    <mat-card>
+      <mat-card-content>
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="backToDashboard()">Về trang chủ</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && !error && result" class="result-content">
+    <div class="header">
+      <h1>Kết quả làm bài thi</h1>
+      <button mat-raised-button color="primary" (click)="backToDashboard()">
+        <mat-icon>home</mat-icon> Về trang chủ
+      </button>
+    </div>
+
+    <mat-card class="result-summary">
+      <mat-card-header>
+        <mat-card-title>Bài thi #{{ result.examId }}</mat-card-title>
+        <mat-card-subtitle>
+          Thời gian: {{ result.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ result.endTime | date:'HH:mm' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="score-section">
+          <div class="score-circle" [ngClass]="getScoreClass()">
+            <span class="score-value">{{ result.score | number:'1.1-1' }}</span>
+            <span class="score-label">điểm</span>
+          </div>
+          
+          <div class="score-details">
+            <div class="score-detail">
+              <span class="label">Thời gian làm bài</span>
+              <span class="value">{{ result.duration }} phút</span>
+            </div>
+            <div class="score-detail">
+              <span class="label">Câu đúng</span>
+              <span class="value">{{ result.correctAnswers }} / {{ result.totalQuestions }}</span>
+            </div>
+            <div class="score-detail">
+              <span class="label">Tỉ lệ đúng</span>
+              <span class="value">{{ calculateScorePercentage() | number:'1.0-0' }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <div class="completion-message">
+          <mat-icon color="primary">check_circle</mat-icon>
+          <p>Bạn đã hoàn thành bài thi. Kết quả đã được lưu lại.</p>
+        </div>
+
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="backToDashboard()">
+            <mat-icon>home</mat-icon> Về trang chủ
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Answers Section - Only displayed when answers array exists -->
+    <div class="answers-section" *ngIf="result.answers && result.answers.length > 0">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Chi tiết câu trả lời</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="answer-item" *ngFor="let answer of result.answers; let i = index">
+            <div class="question-header" [ngClass]="{'correct': answer.isCorrect, 'incorrect': !answer.isCorrect}">
+              <span class="question-number">Câu {{ i + 1 }}</span>
+              <span class="question-status">
+                <mat-icon>{{ answer.isCorrect ? 'check_circle' : 'cancel' }}</mat-icon>
+                {{ answer.isCorrect ? 'Đúng' : 'Sai' }}
+              </span>
+            </div>
+            
+            <div class="question-text">{{ answer.questionText }}</div>
+            
+            <div class="options-list">
+              <div 
+                class="option-item" 
+                *ngFor="let option of answer.options"
+                [ngClass]="{
+                  'correct-option': option.id === answer.correctOptionId,
+                  'incorrect-option': option.id === answer.selectedOptionId && option.id !== answer.correctOptionId,
+                  'selected-option': option.id === answer.selectedOptionId
+                }"
+              >
+                <div class="option-marker">
+                  <mat-icon *ngIf="option.id === answer.correctOptionId">check_circle</mat-icon>
+                  <mat-icon *ngIf="option.id === answer.selectedOptionId && option.id !== answer.correctOptionId">cancel</mat-icon>
+                </div>
+                <div class="option-text">{{ option.text }}</div>
+              </div>
+            </div>
+            
+            <mat-divider *ngIf="i < result.answers.length - 1"></mat-divider>
+          </div>
+          
+          <div class="no-answers-message" *ngIf="result.answers.length === 0">
+            <mat-icon>info</mat-icon>
+            <p>Chi tiết câu trả lời sẽ hiển thị khi đề thi kết thúc.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <div class="no-answers-message" *ngIf="!result.answers || result.answers.length === 0">
+      <mat-card>
+        <mat-card-content>
+          <mat-icon>info</mat-icon>
+          <p>Chi tiết câu trả lời sẽ hiển thị khi đề thi kết thúc.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

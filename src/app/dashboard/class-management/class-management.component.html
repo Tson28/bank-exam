@@ -1,0 +1,129 @@
+<div class="class-management-container">
+  <div class="header">
+    <h2>Quản lý lớp học</h2>
+    <div class="actions">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchText" 
+          placeholder="Tìm kiếm lớp học..." 
+          class="search-input"
+        />
+      </div>
+      <button class="btn-add" (click)="toggleForm()">
+        <span *ngIf="!showForm">+ Thêm lớp học</span>
+        <span *ngIf="showForm">Đóng</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+    <button class="close-btn" (click)="error = null">×</button>
+  </div>
+
+  <!-- Success message -->
+  <div class="alert alert-success" *ngIf="success">
+    {{ success }}
+    <button class="close-btn" (click)="success = null">×</button>
+  </div>
+
+  <!-- Add/Edit Class Form -->
+  <div class="class-form-container" *ngIf="showForm">
+    <form [formGroup]="classForm" (ngSubmit)="onSubmit()">
+      <h3>{{ isEditing ? 'Cập nhật lớp học' : 'Thêm lớp học mới' }}</h3>
+      
+      <div class="form-group">
+        <label for="name">Tên lớp</label>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name" 
+          placeholder="Nhập tên lớp (VD: 10A1)"
+        />
+        <div class="error-message" *ngIf="classForm.get('name')?.invalid && classForm.get('name')?.touched">
+          <span *ngIf="classForm.get('name')?.errors?.['required']">Tên lớp là bắt buộc</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="grade">Khối</label>
+        <select id="grade" formControlName="grade">
+          <option value="">Chọn khối</option>
+          <option *ngFor="let grade of grades" [value]="grade">Khối {{ grade }}</option>
+        </select>
+        <div class="error-message" *ngIf="classForm.get('grade')?.invalid && classForm.get('grade')?.touched">
+          <span *ngIf="classForm.get('grade')?.errors?.['required']">Khối là bắt buộc</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="accessType">Quyền truy cập</label>
+        <select id="accessType" formControlName="accessType">
+          <option [value]="accessTypes.Direct">Tham gia trực tiếp với mã lớp</option>
+          <option [value]="accessTypes.Approval">Yêu cầu phê duyệt khi tham gia</option>
+        </select>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="resetForm()">Hủy</button>
+        <button type="submit" class="btn-submit" [disabled]="classForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="loading-container" *ngIf="isLoading && !showForm">
+    <div class="spinner"></div>
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- Class List -->
+  <div class="class-list-container" *ngIf="!isLoading || showForm">
+    <table class="class-table">
+      <thead>
+        <tr>
+          <th>Tên lớp</th>
+          <th>Khối</th>
+          <th>Mã lớp</th>
+          <th>Quyền truy cập</th>
+          <th>Học sinh</th>
+          <th>Ngày tạo</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cls of filteredClasses">
+          <td>{{ cls.name }}</td>
+          <td>{{ cls.grade }}</td>
+          <td class="class-code-cell">
+            <div class="class-code">
+              <span>{{ cls.classCode }}</span>
+              <button class="btn-copy" [disabled]="!cls.classCode" (click)="cls.classCode && copyClassCode(cls.classCode)" title="Sao chép mã lớp">
+                <i class="fas fa-copy"></i>
+              </button>
+              <button class="btn-refresh" (click)="regenerateClassCode(cls.id)" title="Tạo mã mới">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+          </td>
+          <td>{{ getAccessTypeLabel(cls.accessType) }}</td>
+          <td>{{ cls.studentCount || 0 }}</td>
+          <td>{{ cls.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button class="btn-edit" (click)="editClass(cls)">Sửa</button>
+            <button class="btn-delete" (click)="deleteClass(cls.id)">Xóa</button>
+            <button class="btn-view" (click)="viewClassDetails(cls.id)">Xem</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredClasses.length === 0">
+          <td colspan="7" class="no-data">Không có lớp học nào</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
