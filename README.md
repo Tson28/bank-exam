@@ -1,60 +1,175 @@
+---
+
 # FrontEnd
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.7.
+Dự án này được khởi tạo bằng [Angular CLI](https://github.com/angular/angular-cli) phiên bản **19.2.7**. Đây là phần giao diện người dùng (FrontEnd) của hệ thống, được xây dựng nhằm cung cấp trải nghiệm trực quan, dễ sử dụng, và có thể mở rộng trong tương lai.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Bắt đầu với dự án
+
+### 1. Cài đặt môi trường
+
+Trước khi chạy dự án, bạn cần chuẩn bị:
+
+* **Node.js** (phiên bản >= 20.x khuyến nghị)
+* **npm** hoặc **yarn**
+* **Angular CLI**: cài đặt toàn cục bằng lệnh:
+
+  ```bash
+  npm install -g @angular/cli
+  ```
+
+### 2. Cài đặt thư viện
+
+Tại thư mục dự án, chạy:
+
+```bash
+npm install
+```
+
+Điều này sẽ tải về toàn bộ dependencies được định nghĩa trong `package.json`.
+
+---
+
+## 🖥️ Development server
+
+Để khởi chạy server phát triển cục bộ, chạy lệnh:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Mặc định, ứng dụng sẽ chạy tại địa chỉ:
+👉 `http://localhost:4200/`
 
-## Code scaffolding
+Mỗi khi bạn chỉnh sửa mã nguồn trong thư mục `src/`, ứng dụng sẽ tự động **reload** để hiển thị thay đổi.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🛠️ Code scaffolding
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Angular CLI hỗ trợ sinh code tự động để tăng tốc phát triển. Ví dụ:
+
+* Tạo component mới:
+
+  ```bash
+  ng generate component component-name
+  ```
+* Tạo directive mới:
+
+  ```bash
+  ng generate directive directive-name
+  ```
+* Tạo pipe mới:
+
+  ```bash
+  ng generate pipe pipe-name
+  ```
+* Tạo service mới:
+
+  ```bash
+  ng generate service service-name
+  ```
+
+👉 Để xem toàn bộ lệnh hỗ trợ, chạy:
 
 ```bash
 ng generate --help
 ```
 
-## Building
+---
 
-To build the project run:
+## 📦 Build
+
+Để build dự án (compile sang mã tối ưu hóa):
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Kết quả sẽ nằm trong thư mục `dist/`.
 
-## Running unit tests
+* Mặc định, Angular sẽ tối ưu cho **production** (hiệu suất, tốc độ, kích thước gọn nhẹ).
+* Bạn cũng có thể build theo môi trường custom:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+  ```bash
+  ng build --configuration=staging
+  ```
+
+---
+
+## 🧪 Running unit tests
+
+Để chạy **unit test** với [Karma](https://karma-runner.github.io):
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+Kết quả kiểm thử sẽ hiển thị trực tiếp trong terminal và có thể mở thêm ở trình duyệt.
 
-For end-to-end (e2e) testing, run:
+---
+
+## 🌐 Running end-to-end tests
+
+Để chạy **end-to-end (e2e) tests**:
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Lưu ý: Angular CLI không kèm framework e2e mặc định. Bạn có thể chọn Cypress, Protractor hoặc Playwright để cấu hình tuỳ theo nhu cầu.
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📂 Cấu trúc thư mục
 
+```plaintext
+src/
+ ├── app/                # Các module, component, service chính
+ ├── assets/             # Hình ảnh, file tĩnh
+ ├── environments/       # File cấu hình cho các môi trường (dev, prod, staging)
+ ├── index.html          # File HTML gốc
+ ├── main.ts             # Điểm khởi chạy ứng dụng
+ └── styles.css          # Style toàn cục
+```
+
+---
+
+## 🔧 Các lệnh hữu ích khác
+
+* **Lint code** (kiểm tra coding convention):
+
+  ```bash
+  ng lint
+  ```
+
+* **Tạo production build và deploy**:
+
+  ```bash
+  ng build --prod
+  ```
+
+* **Phân tích bundle size** (giúp tối ưu hiệu năng):
+
+  ```bash
+  ng build --stats-json
+  npx webpack-bundle-analyzer dist/front-end/stats.json
+  ```
+
+---
+
+## 📘 Tài liệu & Tham khảo
+
+* [Angular Official Documentation](https://angular.dev/)
+* [Angular CLI Overview & Command Reference](https://angular.dev/tools/cli)
+* [RxJS Documentation](https://rxjs.dev/) (sử dụng trong quản lý dữ liệu bất đồng bộ)
+* [TypeScript Documentation](https://www.typescriptlang.org/)
+
+---
+
+## ✅ Kết luận
+
+Dự án FrontEnd này sử dụng Angular với cấu trúc chuẩn, hỗ trợ mở rộng dễ dàng và quản lý hiệu quả. Với các công cụ CLI mạnh mẽ, bạn có thể nhanh chóng scaffold, build, test và deploy ứng dụng.
+---
